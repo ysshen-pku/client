@@ -5,13 +5,13 @@ using UnityEngine;
 public class JsonTest : MonoBehaviour {
 
     Vector2 tmp = new Vector2(0f,0f);
-
+    Queue<int[]> numarray;
 
     // Update is called once per frame
 
     private void Awake()
     {
-        jsonTest();
+        queueTest();
     }
 
 
@@ -21,6 +21,29 @@ public class JsonTest : MonoBehaviour {
 
     }
 
+
+    void queueTest()
+    {
+        numarray = new Queue<int[]>();
+        putin(1,2);
+        putin(3, 4);
+        putin(5, 6);
+        int i = 1;
+        while (numarray.Count > 0)
+        {
+            int[] output = numarray.Dequeue();
+            Debug.Log(i.ToString()+":"+output[0].ToString() + "," + output[1].ToString());
+        }
+
+
+    }
+
+    void putin(int a,int b)
+    {
+        int[] array =new int[2] { a,b};
+        numarray.Enqueue(array);
+
+    }
 
 
     void jsonTest()
@@ -43,10 +66,8 @@ public class JsonTest : MonoBehaviour {
             {
                 Debug.Log(item.ToString());
             }
-  
+
         }
-
-
         
     }
 }

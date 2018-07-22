@@ -11,14 +11,14 @@ public class LoginManager : MonoBehaviour
 {
     public Button[] login;
 
-    private ConnectSocket mySocket;
+    private GameController gamelogic;
 
     void Start()
     {
         login[0].onClick.AddListener(Player1LoginCallback);
         login[1].onClick.AddListener(Player2LoginCallback);
         
-        mySocket = GameObject.FindGameObjectWithTag("Socket").GetComponent<ConnectSocket>(); 
+        gamelogic = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>(); 
     }
 
     void Update()
@@ -34,7 +34,8 @@ public class LoginManager : MonoBehaviour
         Debug.Log("Player 1 trying to login.");
         //向服务器发送登录信息
         Message msg = new MsgCSLogin(1);
-        mySocket.Send(ref msg);
+        gamelogic.localPlayerId = 1;
+        gamelogic.SendMessage(ref msg);
     }
 
     public void Player2LoginCallback()
@@ -42,13 +43,14 @@ public class LoginManager : MonoBehaviour
         Debug.Log("Player 2 trying to login.");
         //向服务器发送登录信息
         Message msg = new MsgCSLogin(2);
-        mySocket.Send(ref msg);
+        gamelogic.localPlayerId = 2;
+        gamelogic.SendMessage(ref msg);
     }
 
     public void TryStartGame()
     {
         Debug.Log("Trying to load game start scene.");
-        SceneManager.LoadScene(1);
+        //SceneManager.LoadScene(1);
     }
 }
 

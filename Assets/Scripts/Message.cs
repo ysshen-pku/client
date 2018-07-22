@@ -5,14 +5,17 @@ using System;
 
 public class Message 
 {
-    string bfmt;
+    UInt16 mtype;
+    string bfmt,hfmt;
     List<string> params_name;
     //public Dictionary<string,Type> params_type;
     public Dictionary<string, object> params_dict;
 
-    public Message()
+    public Message(UInt16 type)
     {
+        mtype = type;
         bfmt = "";
+        hfmt = "<H";
         params_name = new List<string>();
         //params_type = new Dictionary<string, Type>();
         params_dict = new Dictionary<string, object>();
@@ -28,21 +31,23 @@ public class Message
 
     public void unpack( byte [] raw)
     {
-        if (raw.GetLength(1) == 0)
+        if (raw.Length == 0)
         {
             return;
         }
-        object[] tmp = StructConverter.Unpack(bfmt, raw);
-        int i = 0;
-        foreach (object item in tmp)
+        string ofmt = hfmt + bfmt;
+        object[] tmp = StructConverter.Unpack(ofmt, raw);
+        for (int i= 1;i<tmp.Length;i++)
         {
-            params_dict[params_name[i]] = item;
+            params_dict[params_name[i-1]] = tmp[i];
+
         }
     }
 
     public byte [] enpack()
     {
         List<object> valueList = new List<object>();
+        valueList.Add(mtype);
         foreach (string item in params_name)
         {
             valueList.Add(params_dict[item]);
@@ -54,7 +59,7 @@ public class Message
 
 public class MsgCSLogin: Message
 {
-    public MsgCSLogin(UInt32 id=0, int icon = -1)
+    public MsgCSLogin(UInt32 id=0, int icon = -1):base(Config.MSG_CS_LOGIN)
     {
         appendParam("id", id, 'I');
         appendParam("icon", icon, 'i');
@@ -63,17 +68,16 @@ public class MsgCSLogin: Message
 
 public class MsgSCLogin: Message
 {
-    public MsgSCLogin(float x = 0, float y = 0, UInt32 hp = 0)
+    public MsgSCLogin(double x = 0, double z = 0):base(Config.MSG_SC_LOGIN)
     {
-        appendParam("x", x, 'f');
-        appendParam("y", y, 'f');
-        appendParam("hp", hp, 'I');
+        appendParam("x", x, 'd');
+        appendParam("z", z, 'd');
     }
 }
 
 public class MsgSCConfirm: Message
 {
-    public MsgSCConfirm(UInt32 uid =0, UInt32 result = 0)
+    public MsgSCConfirm(UInt32 uid =0, UInt32 result = 0):base(Config.MSG_SC_CONFIRM)
     {
         appendParam("uid", uid, 'I');
         appendParam("result", result, 'I');
@@ -82,32 +86,30 @@ public class MsgSCConfirm: Message
 
 public class MsgCSMoveto : Message
 {
-    public MsgCSMoveto(int x=0, int y=0)
+    public MsgCSMoveto(double x=0, double z=0):base(Config.MSG_CS_MOVETO)
     {
-        appendParam("x", x, 'i');
-        appendParam("y", y, 'i');
+        appendParam("x", x, 'd');
+        appendParam("z", z, 'd');
     }
 }
 
 public class MsgSCMoveto: Message
 {
-    public MsgSCMoveto(UInt32 uid=0, int x=0, int y = 0)
+    public MsgSCMoveto(UInt32 uid=0, double x =0, double z = 0):base(Config.MSG_SC_MOVETO)
     {
         appendParam("uid", uid, 'I');
-        appendParam("x", x, 'i');
-        appendParam("y", y, 'i');
+        appendParam("x", x, 'd');
+        appendParam("z", z, 'd');
     }
 }
 
 public class MsgSCNewPlayer : Message
 {
-    public MsgSCNewPlayer(UInt32 uid = 0, float x =0, float y =0, float rx =0,float ry =0)
+    public MsgSCNewPlayer(UInt32 uid = 0, double x =0, double z =0):base(Config.MSG_SC_NEWPLAYER)
     {
         appendParam("uid", uid, 'I');
-        appendParam("x", x, 'f');
-        appendParam("y", y, 'f');
-        appendParam("rx", rx, 'f');
-        appendParam("ry", ry, 'f');
+        appendParam("x", x, 'd');
+        appendParam("z", z, 'd');
     }
 }
 

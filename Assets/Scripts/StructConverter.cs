@@ -21,6 +21,7 @@ public class StructConverter
         if (o is short) return BitConverter.GetBytes((short)o);
         if (o is ushort) return BitConverter.GetBytes((ushort)o);
         if (o is byte || o is sbyte) return new byte[] { (byte)o };
+        if (o is double) return BitConverter.GetBytes((double)o);
         throw new ArgumentException("Unsupported object type found");
     }
 
@@ -34,6 +35,7 @@ public class StructConverter
         if (o is ushort) return "H";
         if (o is byte) return "B";
         if (o is sbyte) return "b";
+        if (o is double) return "d";
         throw new ArgumentException("Unsupported object type found");
     }
 
@@ -78,6 +80,7 @@ public class StructConverter
             {
                 case 'q':
                 case 'Q':
+                case 'd':
                     totalByteLength += 8;
                     break;
                 case 'f':
@@ -124,10 +127,10 @@ public class StructConverter
                     byteArrayPosition += 8;
                     Debug.Log("  Added unsigned 64-bit integer.");
                     break;
-                case 'f':
-                    outputList.Add((object)(ulong)BitConverter.ToDouble(bytes, byteArrayPosition));
-                    byteArrayPosition += 4;
-                    Debug.Log("  Added float.");
+                case 'd':
+                    outputList.Add((object)(double)BitConverter.ToDouble(bytes, byteArrayPosition));
+                    byteArrayPosition += 8;
+                    Debug.Log("  Added double.");
                     break;
                 case 'i':
                     outputList.Add((object)(int)BitConverter.ToInt32(bytes, byteArrayPosition));

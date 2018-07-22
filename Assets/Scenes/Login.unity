@@ -549,7 +549,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7de85d42275de39468eb3851581436b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  login: []
+  login:
+  - {fileID: 1251121926}
+  - {fileID: 625489211}
 --- !u!1 &1251121924
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,8 +754,8 @@ GameObject:
   - component: {fileID: 1632481785}
   - component: {fileID: 1632481784}
   m_Layer: 0
-  m_Name: network
-  m_TagString: Socket
+  m_Name: gamecontroller
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -766,11 +768,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1632481783}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7485112eff7d5c34b83605545c26d805, type: 3}
+  m_Script: {fileID: 11500000, guid: 43d600fd2a97d0043bfb1726bd7dca71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  remotePlayer: {fileID: 0}
-  monster1: {fileID: 0}
 --- !u!4 &1632481785
 Transform:
   m_ObjectHideFlags: 0
