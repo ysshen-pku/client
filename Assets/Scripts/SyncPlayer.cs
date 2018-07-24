@@ -24,12 +24,13 @@ public class SyncPlayer : MonoBehaviour {
 		if (time > syncCycle)
         {
             SyncPosition();
+
         }
 	}
 
     void SyncPosition()
     {
-        Message msg = new MsgCSMoveto(transform.position.x, transform.position.z);
+        Message msg = new MsgCSMoveto(transform.position.x, transform.position.z,transform.rotation.eulerAngles.y);
 
         gamelogic.SendMessage(ref msg);
     }

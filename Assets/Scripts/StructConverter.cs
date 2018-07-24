@@ -48,7 +48,7 @@ public class StructConverter
     /// <remarks>You are responsible for casting the objects in the array back to their proper types.</remarks>
     public static object[] Unpack(string fmt, byte[] bytes)
     {
-        Debug.Log("Format string is length {0}, {1} bytes provided."+ fmt.Length.ToString() + bytes.Length.ToString());
+        //Debug.Log("Format string is length {0}, {1} bytes provided."+ fmt.Length.ToString() + bytes.Length.ToString());
 
         // First we parse the format string to make sure it's proper.
         if (fmt.Length < 1) throw new ArgumentException("Format string cannot be empty.");
@@ -56,7 +56,7 @@ public class StructConverter
         bool endianFlip = false;
         if (fmt.Substring(0, 1) == "<")
         {
-            Debug.Log("  Endian marker found: little endian");
+            //Debug.Log("  Endian marker found: little endian");
             // Little endian.
             // Do we need to flip endianness?
             if (BitConverter.IsLittleEndian == false) endianFlip = true;
@@ -64,7 +64,7 @@ public class StructConverter
         }
         else if (fmt.Substring(0, 1) == ">")
         {
-            Debug.Log("  Endian marker found: big endian");
+            //Debug.Log("  Endian marker found: big endian");
             // Big endian.
             // Do we need to flip endianness?
             if (BitConverter.IsLittleEndian == true) endianFlip = true;
@@ -75,7 +75,7 @@ public class StructConverter
         int totalByteLength = 0;
         foreach (char c in fmt.ToCharArray())
         {
-            Debug.Log("  Format character found: "+c.ToString());
+            //Debug.Log("  Format character found: "+c.ToString());
             switch (c)
             {
                 case 'q':
@@ -102,8 +102,8 @@ public class StructConverter
             }
         }
         
-        Debug.Log("The byte array is expected to be bytes long."+ totalByteLength.ToString());
-        Debug.Log("The byte array nujmber is " + bytes.Length.ToString());
+        //Debug.Log("The byte array is expected to be bytes long."+ totalByteLength.ToString());
+        //Debug.Log("The byte array nujmber is " + bytes.Length.ToString());
         // Test the byte array length to see if it contains as many bytes as is needed for the string.
         if (bytes.Length != totalByteLength) throw new ArgumentException("The number of bytes provided does not match the total length of the format string.");
 
@@ -112,7 +112,7 @@ public class StructConverter
         List<object> outputList = new List<object>();
         byte[] buf;
 
-        Debug.Log("Processing byte array...");
+        //Debug.Log("Processing byte array...");
         foreach (char c in fmt.ToCharArray())
         {
             switch (c)
@@ -120,55 +120,55 @@ public class StructConverter
                 case 'q':
                     outputList.Add((object)(long)BitConverter.ToInt64(bytes, byteArrayPosition));
                     byteArrayPosition += 8;
-                    Debug.Log("  Added signed 64-bit integer.");
+                    //Debug.Log("  Added signed 64-bit integer.");
                     break;
                 case 'Q':
                     outputList.Add((object)(ulong)BitConverter.ToUInt64(bytes, byteArrayPosition));
                     byteArrayPosition += 8;
-                    Debug.Log("  Added unsigned 64-bit integer.");
+                    //Debug.Log("  Added unsigned 64-bit integer.");
                     break;
                 case 'd':
                     outputList.Add((object)(double)BitConverter.ToDouble(bytes, byteArrayPosition));
                     byteArrayPosition += 8;
-                    Debug.Log("  Added double.");
+                    //Debug.Log("  Added double.");
                     break;
                 case 'i':
                     outputList.Add((object)(int)BitConverter.ToInt32(bytes, byteArrayPosition));
                     byteArrayPosition += 4;
-                    Debug.Log("  Added signed 32-bit integer.");
+                    //Debug.Log("  Added signed 32-bit integer.");
                     break;
                 case 'I':
                     outputList.Add((object)(uint)BitConverter.ToUInt32(bytes, byteArrayPosition));
                     byteArrayPosition += 4;
-                    Debug.Log("  Added unsignedsigned 32-bit integer.");
+                    //Debug.Log("  Added unsignedsigned 32-bit integer.");
                     break;
                 case 'h':
                     outputList.Add((object)(short)BitConverter.ToInt16(bytes, byteArrayPosition));
                     byteArrayPosition += 2;
-                    Debug.Log("  Added signed 16-bit integer.");
+                    //Debug.Log("  Added signed 16-bit integer.");
                     break;
                 case 'H':
                     outputList.Add((object)(ushort)BitConverter.ToUInt16(bytes, byteArrayPosition));
                     byteArrayPosition += 2;
-                    Debug.Log("  Added unsigned 16-bit integer.");
+                    //Debug.Log("  Added unsigned 16-bit integer.");
                     break;
                 case 'b':
                     buf = new byte[1];
                     Array.Copy(bytes, byteArrayPosition, buf, 0, 1);
                     outputList.Add((object)(sbyte)buf[0]);
                     byteArrayPosition++;
-                    Debug.Log("  Added signed byte");
+                    //Debug.Log("  Added signed byte");
                     break;
                 case 'B':
                     buf = new byte[1];
                     Array.Copy(bytes, byteArrayPosition, buf, 0, 1);
                     outputList.Add((object)(byte)buf[0]);
                     byteArrayPosition++;
-                    Debug.Log("  Added unsigned byte");
+                    //Debug.Log("  Added unsigned byte");
                     break;
                 case 'x':
                     byteArrayPosition++;
-                    Debug.Log("  Ignoring a byte");
+                    //Debug.Log("  Ignoring a byte");
                     break;
                 default:
                     throw new ArgumentException("You should not be here.");

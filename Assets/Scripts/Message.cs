@@ -68,10 +68,11 @@ public class MsgCSLogin: Message
 
 public class MsgSCLogin: Message
 {
-    public MsgSCLogin(double x = 0, double z = 0):base(Config.MSG_SC_LOGIN)
+    public MsgSCLogin(double x = 0, double z = 0, Int16 hp =0):base(Config.MSG_SC_LOGIN)
     {
         appendParam("x", x, 'd');
         appendParam("z", z, 'd');
+        appendParam("hp", hp, 'h');
     }
 }
 
@@ -86,30 +87,119 @@ public class MsgSCConfirm: Message
 
 public class MsgCSMoveto : Message
 {
-    public MsgCSMoveto(double x=0, double z=0):base(Config.MSG_CS_MOVETO)
+    public MsgCSMoveto(double x=0, double z=0, double ry = 0):base(Config.MSG_CS_MOVETO)
     {
         appendParam("x", x, 'd');
         appendParam("z", z, 'd');
+        appendParam("ry", ry, 'd');
     }
 }
 
 public class MsgSCMoveto: Message
 {
-    public MsgSCMoveto(UInt32 uid=0, double x =0, double z = 0):base(Config.MSG_SC_MOVETO)
+    public MsgSCMoveto(UInt32 uid=0, double x =0, double z = 0,double ry =0):base(Config.MSG_SC_MOVETO)
     {
         appendParam("uid", uid, 'I');
         appendParam("x", x, 'd');
         appendParam("z", z, 'd');
+        appendParam("ry", ry, 'd');
     }
 }
 
 public class MsgSCNewPlayer : Message
 {
-    public MsgSCNewPlayer(UInt32 uid = 0, double x =0, double z =0):base(Config.MSG_SC_NEWPLAYER)
+    public MsgSCNewPlayer(UInt32 uid = 0, double x =0, double z =0,double ry =0):base(Config.MSG_SC_NEWPLAYER)
     {
         appendParam("uid", uid, 'I');
+        appendParam("x", x, 'd');
+        appendParam("z", z, 'd');
+        appendParam("ry", ry, 'd');
+    }
+}
+
+public class MsgSCNewMonster : Message
+{
+    public MsgSCNewMonster(UInt32 mid = 0, double x = 0, double z = 0) : base(Config.MSG_SC_NEWMONSTER)
+    {
+        appendParam("mid", mid, 'I');
         appendParam("x", x, 'd');
         appendParam("z", z, 'd');
     }
 }
 
+public class MsgSCMonsterMove : Message
+{
+    public MsgSCMonsterMove(UInt32 mid = 0, double x = 0, double z = 0) : base(Config.MSG_SC_MONSTER_MOVE)
+    {
+        appendParam("mid", mid, 'I');
+        appendParam("x", x, 'd');
+        appendParam("z", z, 'd');
+    }
+}
+
+public class MsgCSTrapPlace : Message
+{
+    public MsgCSTrapPlace(UInt32 uid= 0, UInt16 type =0, double x = 0, double z =0) : base(Config.MSG_CS_TRAPPLACE)
+    {
+        appendParam("uid", uid, 'I');
+        appendParam("type", type, 'H');
+        appendParam("x", x, 'd');
+        appendParam("z", z, 'd');
+    }
+}
+
+public class MsgSCTrapPlace :Message
+{
+    public MsgSCTrapPlace(UInt32 tid = 0 , UInt16 type = 0, double x = 0, double z = 0) : base(Config.MSG_SC_TRAPPLACE)
+    {
+        appendParam("tid", tid, 'I');
+        appendParam("type", type, 'H');
+        appendParam("x", x, 'd');
+        appendParam("z", z, 'd');
+    }
+}
+
+
+public class MsgCSMonsterDamage : Message
+{
+    public MsgCSMonsterDamage(UInt32 uid = 0, UInt32 mid = 0, UInt16 damage = 0, Int16 stun = 0, UInt16 range = 0, double cx =0, double cz=0) : base(Config.MSG_CS_MONSTER_DAMAGE)
+    {
+        appendParam("uid", uid, 'I');
+        appendParam("mid", mid, 'I');
+        appendParam("damage", damage, 'H');
+        appendParam("stun", stun, 'h');
+        appendParam("range", range, 'H');
+        appendParam("cx", cx, 'd');
+        appendParam("cz", cz, 'd');
+    }
+}
+
+public class MsgSCMonsterState: Message
+{
+    public MsgSCMonsterState(UInt32 mid =0 ,Int16 hp =0 , UInt16 state = 0):base(Config.MSG_SC_MONSTER_STATE)
+    {
+        appendParam("mid", mid, 'I');
+        appendParam("hp", hp, 'h');
+        appendParam("state", state, 'H');
+    }
+}
+
+public class MsgSCPlayerInfo : Message
+{
+    public MsgSCPlayerInfo(UInt32 uid =0, Int16 hp =0, Int32 coin = 0, Int32 exp = 0) : base(Config.MSG_SC_PLAYER_INFO)
+    {
+        appendParam("uid", uid, 'I');
+        appendParam("hp", hp, 'h');
+        appendParam("coin", coin, 'i');
+        appendParam("exp", exp, 'i');
+    }
+}
+
+public class MsgSCMonsterDeath : Message
+{
+    public MsgSCMonsterDeath(UInt32 uid =0 , UInt32 mid = 0) : base(Config.MSG_SC_MONSTER_DEATH)
+    {
+        appendParam("uid", uid, 'I');
+        appendParam("mid", mid, 'I');
+    }
+}

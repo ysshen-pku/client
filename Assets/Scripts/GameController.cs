@@ -12,6 +12,10 @@ public class GameController : MonoBehaviour {
     SpawnManager spawn;
     bool isLoginScene;
 
+    private Dictionary<string, GameObject> playerDict;
+    private Dictionary<string, GameObject> monsterDict;
+    private Dictionary<string, GameObject> trapDict;
+
     public void SendMessage(ref Message msg)
     {
         mySocket.Send(ref msg);
@@ -43,6 +47,24 @@ public class GameController : MonoBehaviour {
                 msg.unpack(rawmsg);
                 HandleGameStart(ref msg);
             }
+            else if (msgTpye == Config.MSG_SC_MONSTER_MOVE)
+            {
+                MsgSCMonsterMove msg = new MsgSCMonsterMove();
+                msg.unpack(rawmsg);
+                HandleMonsterMove(ref msg);
+            }
+            else if (msgTpye == Config.MSG_SC_TRAPPLACE)
+            {
+                MsgSCTrapPlace msg = new MsgSCTrapPlace();
+                msg.unpack(rawmsg);
+                HandleTrapPlace(ref msg);
+            }
+            else if (msgTpye == Config.MSG_SC_MONSTER_DEATH)
+            {
+                MsgSCMonsterDeath msg = new MsgSCMonsterDeath();
+                msg.unpack(rawmsg);
+                HandleMonsterDeath(ref msg);
+            }
             rawmsg = mySocket.Recv();
         }
     }
@@ -65,38 +87,91 @@ public class GameController : MonoBehaviour {
         //Vector3 rot = new Vector3((float)(double)msg.params_dict["rx"], (float)(double)msg.params_dict["ry"]);
         if (uid == localPlayerId)
             return;
-
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        foreach (GameObject player in players)
+        string newplayername = "player" + uid.ToString();
+        if (playerDict.ContainsKey(newplayername))
         {
-            if (player.name == uid.ToString())
-            {
-                Debug.Log("trying to instantiate a existed remote player with uid:" + uid.ToString());
-                return;
-            }
+            // existed player
+            return;
         }
-
-        spawn.InstantiateRemotePlayer(uid.ToString(), pos);
-
+        Quaternion rot = new Quaternion();
+        rot.y = (float)(double)msg.params_dict["ry"];
+        GameObject thisplayer = spawn.InstantiateRemotePlayer(newplayername, pos,rot);
+        playerDict.Add(newplayername, thisplayer);
     }
 
     private void HandlePlayerMoveto(ref MsgSCMoveto msg)
     {
         Vector3 vec = new Vector3((float)(double)msg.params_dict["x"],0, (float)(double)msg.params_dict["z"]);
         UInt32 uid = (UInt32)msg.params_dict["uid"];
+        Quaternion rot = new Quaternion();
+        rot.eulerAngles = new Vector3(0, (float)(double)msg.params_dict["ry"], 0);
 
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        string objectName = "player" + uid.ToString();
-        foreach (GameObject player in players)
+        string playername = "player" + uid.ToString();
+        if (playerDict.ContainsKey(playername))
         {
-            if (player.name == objectName)
+            playerDict[playername].transform.rotation = rot;
+            playerDict[playername].GetComponent<AICharactorController>().SetDestination(vec);
+        }
+        else
+        {
+            //  if cannot find player with uid , debun in  Instantiate
+            GameObject thisplayer = spawn.InstantiateRemotePlayer(playername, vec, rot);
+            // Debug.Log("trying to set velocity on a unexisted player with uid:" + uid.ToString());
+            playerDict.Add(playername, thisplayer);
+            return;
+        }
+    }
+
+    private void HandleMonsterMove(ref MsgSCMonsterMove msg)
+    {
+        Vector3 pos = new Vector3((float)(double)msg.params_dict["x"], 0, (float)(double)msg.params_dict["z"]);
+        UInt32 mid = (UInt32)msg.params_dict["mid"];
+
+        string monstername = "m" + mid.ToString();
+        if (monsterDict.ContainsKey(monstername))
+        {
+            monsterDict[monstername].GetComponent<AICharactorController>().SetDestination(pos);
+        }
+        else
+        {
+            // cannot find monster with mid
+            Quaternion rot = new Quaternion();
+            GameObject thismonster = spawn.InstantiateMonster(monstername, pos, rot);
+            monsterDict.Add(monstername, thismonster);
+        }
+    }
+
+    private void HandleMonsterDeath(ref MsgSCMonsterDeath msg)
+    {
+        UInt32 killuid = (UInt32)msg.params_dict["uid"];
+        UInt32 mid = (UInt32)msg.params_dict["mid"];
+        string monstername = "m" + mid.ToString();
+        if (monsterDict.ContainsKey(monstername))
+        {
+            // delete 
+            monsterDict[monstername].GetComponent<AICharactorController>().OnDeath();
+            monsterDict.Remove(monstername);
+        }
+        else
+        {
+            // cannot find monster with mid
+            // Debug
+        }
+    }
+
+    private void HandleTrapPlace(ref MsgSCTrapPlace msg)
+    {
+        UInt32 tid = (UInt32)msg.params_dict["tid"];
+        GameObject[] traps = GameObject.FindGameObjectsWithTag("Finish");
+        string trapname = "m" + tid.ToString();
+        foreach (GameObject trap in traps)
+        {
+            if (trap.name == trapname)
             {
-                player.GetComponent<AICharactorController>().SetDestination(vec);
                 return;
             }
         }
-        Debug.Log("trying to set velocity on a unexisted player with uid:" + uid.ToString());
-        return;
+        spawn.InstantiateTrap(trapname,(UInt16)msg.params_dict["type"], (float)(double)msg.params_dict["x"], (float)(double)msg.params_dict["z"]);
     }
 
     // Use this for initialization
@@ -104,14 +179,14 @@ public class GameController : MonoBehaviour {
         DontDestroyOnLoad(this.gameObject);
         mySocket = ConnectSocket.getSocketInstance();
         isLoginScene = true;
-	}
+        monsterDict = new Dictionary<string, GameObject>();
+        trapDict = new Dictionary<string, GameObject>();
+        spawn = GameObject.FindGameObjectWithTag("Respawn").GetComponent<SpawnManager>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        if (spawn == null)
-        {
-            spawn = GameObject.FindGameObjectWithTag("Respawn").GetComponent<SpawnManager>();
-        }
+
         ProcessMessage();
 	}
 

@@ -31,6 +31,8 @@ public class LoginManager : MonoBehaviour
 
     public void Player1LoginCallback()
     {
+        if (gamelogic.localPlayerId != 0)
+            return;
         Debug.Log("Player 1 trying to login.");
         //向服务器发送登录信息
         Message msg = new MsgCSLogin(1);
@@ -40,6 +42,8 @@ public class LoginManager : MonoBehaviour
 
     public void Player2LoginCallback()
     {
+        if (gamelogic.localPlayerId != 0)
+            return;
         Debug.Log("Player 2 trying to login.");
         //向服务器发送登录信息
         Message msg = new MsgCSLogin(2);

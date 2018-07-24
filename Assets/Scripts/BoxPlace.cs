@@ -7,8 +7,8 @@ public class BoxPlace : MonoBehaviour {
     public GameObject gameObject;
     public GameObject gameObject2;
 
-    public float range = 100f;                      // The distance the gun can fire.
-
+    public float range = 50f;                      // The distance the gun can fire.
+    Transform shootPosition;
     Ray shootRay = new Ray();                       // A ray from the gun end forwards.
     RaycastHit shootHit;                            // A raycast hit to get information about what was hit.
     GameObject lastObject;
