@@ -310,9 +310,12 @@
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\LoginManager.cs" />
     <Compile Include="Assets\Scripts\Message.cs" />
+    <Compile Include="Assets\Scripts\MonsterHPSlider.cs" />
     <Compile Include="Assets\Scripts\MouseLook.cs" />
     <Compile Include="Assets\Scripts\PlayerInfo.cs" />
+    <Compile Include="Assets\Scripts\PlayerInfoUI.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\RemotePlayerController.cs" />
     <Compile Include="Assets\Scripts\Serialization.cs" />
     <Compile Include="Assets\Scripts\SimpleSmoothMouseLook.cs" />
     <Compile Include="Assets\Scripts\SpawnManager.cs" />

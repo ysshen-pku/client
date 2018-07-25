@@ -25,8 +25,9 @@ public class SpawnManager : MonoBehaviour {
         Quaternion origin = new Quaternion();
         var playerinstance = Instantiate(player, pos, origin);
         playerinstance.name = "localplayer";
-        Camera.current.gameObject.SetActive(false);
-        playerinstance.GetComponent<Camera>().gameObject.SetActive(true);
+        Camera.main.gameObject.SetActive(false);
+        //Camera.current.gameObject.SetActive(false);
+        playerinstance.GetComponentInChildren<Camera>().gameObject.SetActive(true);
         return playerinstance;
     }
 

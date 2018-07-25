@@ -66,9 +66,9 @@ public class MsgCSLogin: Message
     }
 }
 
-public class MsgSCLogin: Message
+public class MsgSCGameStart: Message
 {
-    public MsgSCLogin(double x = 0, double z = 0, Int16 hp =0):base(Config.MSG_SC_LOGIN)
+    public MsgSCGameStart(double x = 0, double z = 0, Int16 hp =0):base(Config.MSG_SC_GAMESTART)
     {
         appendParam("x", x, 'd');
         appendParam("z", z, 'd');
@@ -186,12 +186,12 @@ public class MsgSCMonsterState: Message
 
 public class MsgSCPlayerInfo : Message
 {
-    public MsgSCPlayerInfo(UInt32 uid =0, Int16 hp =0, Int32 coin = 0, Int32 exp = 0) : base(Config.MSG_SC_PLAYER_INFO)
+    public MsgSCPlayerInfo(UInt32 uid =0, Int16 hp =0, UInt32 coin = 0, UInt32 exp = 0) : base(Config.MSG_SC_PLAYER_INFO)
     {
         appendParam("uid", uid, 'I');
         appendParam("hp", hp, 'h');
-        appendParam("coin", coin, 'i');
-        appendParam("exp", exp, 'i');
+        appendParam("coin", coin, 'I');
+        appendParam("exp", exp, 'I');
     }
 }
 
@@ -201,5 +201,14 @@ public class MsgSCMonsterDeath : Message
     {
         appendParam("uid", uid, 'I');
         appendParam("mid", mid, 'I');
+    }
+}
+
+public class MsgSCRoundState: Message
+{
+    public MsgSCRoundState(UInt16 rid = 0, Int16 basehp = 0) : base(Config.MSG_SC_ROUND_STATE)
+    {
+        appendParam("rid", rid, 'H');
+        appendParam("basehp", basehp, 'h');
     }
 }

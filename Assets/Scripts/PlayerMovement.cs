@@ -5,7 +5,7 @@ using UnityStandardAssets.CrossPlatformInput;
 public class PlayerMovement : MonoBehaviour
 {
     public Transform shootPoint;
-    public float MaxUpdownAngle = 10f;
+    public float MaxUpdownAngle = 30f;
 
     public float MoveSpeed = 3f;
     public float RotateSpeed = 3f;

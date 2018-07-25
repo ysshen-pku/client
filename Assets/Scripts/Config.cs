@@ -11,7 +11,7 @@ public class Config {
     public const UInt16 MSG_SC_MOVETO = 0x2002;
     public const UInt16 MSG_SC_NEWPLAYER = 0x2003;
     public const UInt16 MSG_CS_LOGIN = 0x1001;
-    public const UInt16 MSG_SC_LOGIN = 0x2001;
+    public const UInt16 MSG_SC_GAMESTART = 0x2001;
     public const UInt16 MSG_SC_CONFIRM = 0x2011;
     public const UInt16 MSG_SC_NEWMONSTER = 0x2004;
     public const UInt16 MSG_SC_MONSTER_MOVE = 0x2005;
@@ -21,6 +21,7 @@ public class Config {
     public const UInt16 MSG_SC_MONSTER_STATE = 0x2007;
     public const UInt16 MSG_SC_PLAYER_INFO = 0x2008;
     public const UInt16 MSG_SC_MONSTER_DEATH = 0x2009;
+    public const UInt16 MSG_SC_ROUND_STATE = 0x2010;
 
     Config()
     {

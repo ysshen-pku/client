@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 136860502596932294}
   - component: {fileID: 82708607752400344}
   - component: {fileID: 114710900120979720}
+  - component: {fileID: 114457881733514356}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -517,11 +518,18 @@ MonoBehaviour:
   trap:
   - {fileID: 1504343748710898, guid: 830ea786417f663438ea9f58d85e1613, type: 2}
   - {fileID: 1819845330696000, guid: 68332f0630e0ed843b375be93c28a8dd, type: 2}
-  damagePerShot: 20
-  timeBetweenBullets: 0.15
-  range: 100
-  aoeSkillCD: 5
   bomb: {fileID: 1972351381622412, guid: 096af88a8ac619e4d8d2336d29c90cc2, type: 2}
+--- !u!114 &114457881733514356
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1292233166943586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16754656324a014398cc733229f1ad6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114710900120979720
 MonoBehaviour:
   m_ObjectHideFlags: 1
