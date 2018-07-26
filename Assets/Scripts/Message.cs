@@ -186,12 +186,14 @@ public class MsgSCMonsterState: Message
 
 public class MsgSCPlayerInfo : Message
 {
-    public MsgSCPlayerInfo(UInt32 uid =0, Int16 hp =0, UInt32 coin = 0, UInt32 exp = 0) : base(Config.MSG_SC_PLAYER_INFO)
+    public MsgSCPlayerInfo(UInt32 uid = 0, Int16 hp = 0, UInt32 coin = 0, UInt32 exp = 0, UInt16 spike = 0, UInt16 freeze = 0) : base(Config.MSG_SC_PLAYER_INFO)
     {
         appendParam("uid", uid, 'I');
         appendParam("hp", hp, 'h');
         appendParam("coin", coin, 'I');
         appendParam("exp", exp, 'I');
+        appendParam("spike", spike, 'H');
+        appendParam("freeze", freeze, 'H');
     }
 }
 
@@ -212,3 +214,23 @@ public class MsgSCRoundState: Message
         appendParam("basehp", basehp, 'h');
     }
 }
+
+public class MsgSCGameReset: Message
+{
+    public MsgSCGameReset(UInt16 rid =0 ,double x =0, double z = 0) : base(Config.MSG_SC_GAME_RESET)
+    {
+        appendParam("rid", rid, 'H');
+        appendParam("x", x, 'd');
+        appendParam("z", z, 'd');
+    }
+}
+
+public class MsgCSBuyTrap: Message
+{
+    public MsgCSBuyTrap(UInt32 uid = 0, UInt16 ttype = 0): base(Config.MSG_CS_BUY_TRAP)
+    {
+        appendParam("uid", uid, 'I');
+        appendParam("ttype", ttype, 'H');
+    }
+}
+

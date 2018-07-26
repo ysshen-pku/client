@@ -297,9 +297,11 @@
     <Compile Include="Assets\_CompletedAssets\SampleAssets\Effects\ImageEffects\Scripts\VignetteAndChromaticAberration.cs" />
     <Compile Include="Assets\JSON.cs" />
     <Compile Include="Assets\JsonTest.cs" />
+    <Compile Include="Assets\NavExport.cs" />
     <Compile Include="Assets\Scripts\AICharactorController.cs" />
     <Compile Include="Assets\Scripts\BombController.cs" />
     <Compile Include="Assets\Scripts\BoxPlace.cs" />
+    <Compile Include="Assets\Scripts\BuyController.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\CharactorMovement.cs" />
     <Compile Include="Assets\Scripts\Config.cs" />
@@ -312,6 +314,7 @@
     <Compile Include="Assets\Scripts\Message.cs" />
     <Compile Include="Assets\Scripts\MonsterHPSlider.cs" />
     <Compile Include="Assets\Scripts\MouseLook.cs" />
+    <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\PlayerInfo.cs" />
     <Compile Include="Assets\Scripts\PlayerInfoUI.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
@@ -321,6 +324,7 @@
     <Compile Include="Assets\Scripts\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\StructConverter.cs" />
     <Compile Include="Assets\Scripts\SyncPlayer.cs" />
+    <Compile Include="Assets\Scripts\TrapController.cs" />
     <Compile Include="Assets\Scripts\WeaponController.cs" />
   </ItemGroup>
   <ItemGroup>

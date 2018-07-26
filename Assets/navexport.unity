@@ -302,6 +302,34 @@ Prefab:
     - {fileID: 114622711426546138, guid: ed5245c75018a5445b84a9d31a092812, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: ed5245c75018a5445b84a9d31a092812, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1018990187
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1018990188}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1018990188
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1018990187}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1896009813 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1547836288627428, guid: ed5245c75018a5445b84a9d31a092812,
@@ -315,10 +343,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1896009813}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f04cc0c47bcdbad4fa5f32114d091156, type: 3}
+  m_Script: {fileID: 11500000, guid: 2676f8345dd3aea4893592da76be79eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftUpStart: {x: -10, y: 0, z: -15}
-  accuracy: 0.3
-  height: 80
-  wide: 180
+  leftUpStart: {x: -10, y: 0, z: 35}
+  accuracy: 0.2
+  height: 250
+  wide: 100

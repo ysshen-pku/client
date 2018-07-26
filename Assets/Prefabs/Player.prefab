@@ -27,6 +27,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1187959373859810
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4864374838848794}
+  m_Layer: 0
+  m_Name: TrapPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1292233166943586
 GameObject:
   m_ObjectHideFlags: 0
@@ -40,7 +55,10 @@ GameObject:
   - component: {fileID: 136860502596932294}
   - component: {fileID: 82708607752400344}
   - component: {fileID: 114710900120979720}
-  - component: {fileID: 114457881733514356}
+  - component: {fileID: 114936578838398016}
+  - component: {fileID: 114790396954650414}
+  - component: {fileID: 114204437059161864}
+  - component: {fileID: 114881497604972240}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -201,6 +219,7 @@ Transform:
   - {fileID: 4210463811125384}
   - {fileID: 4783745089374738}
   - {fileID: 4316274202602884}
+  - {fileID: 4864374838848794}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -230,6 +249,19 @@ Transform:
   m_Father: {fileID: 4210463811125384}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4864374838848794
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1187959373859810}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.337, y: 2.48, z: 2.59}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4523736476664370}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!20 &20855596432647586
 Camera:
   m_ObjectHideFlags: 1
@@ -515,11 +547,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootPoint: {fileID: 4316274202602884}
-  trap:
-  - {fileID: 1504343748710898, guid: 830ea786417f663438ea9f58d85e1613, type: 2}
-  - {fileID: 1819845330696000, guid: 68332f0630e0ed843b375be93c28a8dd, type: 2}
   bomb: {fileID: 1972351381622412, guid: 096af88a8ac619e4d8d2336d29c90cc2, type: 2}
---- !u!114 &114457881733514356
+--- !u!114 &114204437059161864
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -542,10 +571,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootPoint: {fileID: 4316274202602884}
-  MaxUpdownAngle: 5
+  trapPoint: {fileID: 4864374838848794}
+  MaxUpdownAngle: 10
   MoveSpeed: 5
   RotateSpeed: 3
   m_Cam: {fileID: 0}
+--- !u!114 &114790396954650414
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1292233166943586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40bb6ec593d49fb43ba8ffe62020074a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114881497604972240
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1292233166943586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8cce26623622b248885bbad582e024d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114936578838398016
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1292233166943586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe8f88b515e6dd4c927cd347e16eb7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trapPoint: {fileID: 4864374838848794}
+  trap:
+  - {fileID: 1504343748710898, guid: 830ea786417f663438ea9f58d85e1613, type: 2}
+  - {fileID: 1819845330696000, guid: 68332f0630e0ed843b375be93c28a8dd, type: 2}
 --- !u!120 &120348826327671552
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -812,7 +879,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: -657532981
+  randomSeed: 1878547225
   InitialModule:
     serializedVersion: 3
     enabled: 1

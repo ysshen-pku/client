@@ -89,7 +89,7 @@ public class LoginManager : MonoBehaviour
         playerInfo.SetPlayerId(localPlayerId);
         Vector3 pos = new Vector3((float)(double)msg.params_dict["x"], 0, (float)(double)msg.params_dict["z"]);
         playerInfo.SetPlayerPosition(pos);
-        playerInfo.UpdatePlayerInfo((Int16)msg.params_dict["hp"], 0, 0);
+        playerInfo.UpdatePlayerInfo((Int16)msg.params_dict["hp"], 0, 0, 0,0);
         SceneManager.LoadScene("main", LoadSceneMode.Single);
 
         isgaming = true;

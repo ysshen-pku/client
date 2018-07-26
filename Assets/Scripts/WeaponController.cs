@@ -6,14 +6,13 @@ using System;
 public class WeaponController : MonoBehaviour
 {
     public Transform shootPoint;
-    public GameObject [] trap;
-        public GameObject bomb;
 
+        public GameObject bomb;
 
     private PlayerInfo playerInfo;
     private GameController gameController;
         float shoottimer;                                    // A timer to determine when to fire.
-    float placetimer;
+
         Ray shootRay = new Ray();                       // A ray from the gun end forwards.
         RaycastHit shootHit;                            // A raycast hit to get information about what was hit.
         int shootableMask;                              // A layer mask so the raycast only hits things on the shootable layer.
@@ -24,12 +23,10 @@ public class WeaponController : MonoBehaviour
      //   public Light faceLight;								// Duh
         float effectsDisplayTime = 0.2f;                // The proportion of the timeBetweenBullets that the effects will display for.
 
-        GameObject lastObject;
 
         float aoeSkillTimer;
         float bombExistTime = 3f;
 
-        bool isTrapping = false;
 
         void Awake()
         {
@@ -51,24 +48,12 @@ public class WeaponController : MonoBehaviour
     {
 
         // Add the time since Update was last called to the timer.
-        placetimer += Time.deltaTime;
         aoeSkillTimer += Time.deltaTime;
         shoottimer += Time.deltaTime;
         // remove the box shader
-        lastObject = GameObject.FindGameObjectWithTag("Temp");
-        if (lastObject != null)
-        {
-            DestroyObject(lastObject);
-        }
-        if (!isTrapping)
-        {
 
-            if (Input.GetButton("Trap"))
-            {
-                Cursor.visible = true;
-                isTrapping = true;
-                return;
-            }
+        if (playerInfo.playerstate == Config.PLAYER_STATE_COMMON)
+        {
             // If the Fire1 button is being press and it's time to fire...
             if (Input.GetButton("Fire1") && shoottimer >= playerInfo.leftShootCD && Time.timeScale != 0)
             {
@@ -82,38 +67,7 @@ public class WeaponController : MonoBehaviour
             }
         }
         // setting trap state
-        else
-        {
-            //Debug.Log("is Traping");
-            if (Input.GetButton("Trap"))
-            {
-                Cursor.visible = false;
-                isTrapping = false;
-                return;
-            }
-            if (Input.GetButton("Fire1") && placetimer >= 2f && Time.timeScale != 0)
-            {
-                TryPlaced();
-            }
-            shootRay.origin = shootPoint.position;
-            shootRay.direction = shootPoint.forward;
-            // Perform the raycast against gameobjects on the shootable layer and if it hits something...
-            if (Physics.Raycast(shootRay, out shootHit, playerInfo.shootRange, shootableMask))
-            {
-                //Debug.Log("Did Hit");
-                if (shootHit.collider.gameObject.tag == "Ground")
-                {
-                    //Debug.Log("Did Hit Ground");
-                    Vector3 placePosition = shootHit.point;
-                    //fix the position 
-                    //placePosition = GetTrapFixedPos(placePosition);
-                    placePosition.y += 0.01f;
-                    Quaternion rot = new Quaternion();
-                    Instantiate(trap[0], placePosition, rot);
-                }
 
-            }
-        }
         if (shoottimer >= playerInfo.leftShootCD * effectsDisplayTime)
         {
             // ... disable the effects.
@@ -121,84 +75,29 @@ public class WeaponController : MonoBehaviour
         }
     }
 
-    void TryPlaced()
+
+    public void DisableEffects()
     {
-        placetimer = 0;
-        shootRay.origin = shootPoint.position;
-        shootRay.direction = shootPoint.forward;
-        // Perform the raycast against gameobjects on the shootable layer and if it hits something...
-        if (Physics.Raycast(shootRay, out shootHit, playerInfo.shootRange, shootableMask))
-        {
-            //Debug.Log("Did Hit");
-            if (shootHit.collider.gameObject.tag == "Ground")
-            {
-                //Debug.Log("Did Hit Ground");
-                // ... the enemy should take damage.
-                Vector3 pos = shootHit.point;
-                Message msg = new MsgCSTrapPlace(gameController.localPlayerId, 0, (double)pos.x, (double)pos.z);
-                gameController.SendMessage(ref msg);
-                //placePosition.y += 0.01f;
-                //Instantiate(trap[1], placePosition, Quaternion.identity);
-            }
-
-        }
-    }
-
-    private Vector3 GetTrapFixedPos(Vector3 pos)
-    {
-        Vector3 fpos = new Vector3();
-        pos *= 2;
-        if (Math.Abs(pos.x - Math.Truncate(pos.x)) > 0.5)
-        {
-            if (pos.x > 0)
-                fpos.x = pos.x + 1;
-            else if (pos.x < 0)
-                fpos.x = pos.x - 1;
-            else
-                fpos.x = pos.x;
-        }
-        if (Math.Abs(pos.z - Math.Truncate(pos.z)) > 0.5)
-        {
-            if (pos.z > 0)
-                fpos.z = pos.z + 1;
-            else if (pos.x < 0)
-                fpos.z = pos.z - 1;
-            else
-                fpos.z = pos.z;
-        }
-        fpos.y = pos.y;
-        fpos /= 2;
-        return fpos;
-    }
-
-
-        public void DisableEffects()
-        {
 
         // Disable the line renderer and the light.
         
             gunLine.enabled = false;
          //   faceLight.enabled = false;
           //  gunLight.enabled = false;
-        }
+    }
 
 
-        void Shoot()
+    void Shoot()
         {
-            // Reset the timer.
             shoottimer = 0f;
-
-            // Play the gun shot audioclip.
             gunAudio.Play();
 
             // Enable the lights.
          //   gunLight.enabled = true;
         //    faceLight.enabled = true;
-
             // Stop the particles from playing if they were, then start the particles.
             gunParticles.Stop();
             gunParticles.Play();
-
             // Enable the line renderer and set it's first position to be the end of the gun.
             gunLine.enabled = true;
             gunLine.SetPosition(0, shootPoint.position);
@@ -210,15 +109,15 @@ public class WeaponController : MonoBehaviour
         shootRay.direction = Camera.main.transform.forward;
 
             // Perform the raycast against gameobjects on the shootable layer and if it hits something...
-            if (Physics.Raycast(shootRay, out shootHit, playerInfo.shootRange , shootableMask))
-            {
+        if (Physics.Raycast(shootRay, out shootHit, playerInfo.shootRange , shootableMask))
+        {
 
             // Try and find an EnemyHealth script on the gameobject hit.
                 GameObject monster = shootHit.collider.gameObject;
 
                 // If the EnemyHealth component exist...
-                if (monster.tag == "Monster")
-                {
+            if (monster.tag == "Monster")
+            {
                 // ... the enemy should take damage.
                     string midstr = monster.name.Substring(1);
                     UInt32 mid = 0;
@@ -231,18 +130,18 @@ public class WeaponController : MonoBehaviour
                     {// parse error 
                         //Debug.Log("parsing midstr to mid error."+midstr);
                     }
-                }
+            }
                 
                 // Set the second position of the line renderer to the point the raycast hit.
                 gunLine.SetPosition(1, shootHit.point);
-            }
+        }
             // If the raycast didn't hit anything on the shootable layer...
-            else
-            {
+        else
+        {
                 // ... set the second position of the line renderer to the fullest extent of the gun's range.
                 gunLine.SetPosition(1, shootRay.origin + shootRay.direction * playerInfo.shootRange);
-            }
         }
+    }
 
         void TrySkillShoot()
         {

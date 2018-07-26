@@ -5,6 +5,7 @@ using UnityStandardAssets.CrossPlatformInput;
 public class PlayerMovement : MonoBehaviour
 {
     public Transform shootPoint;
+    public Transform trapPoint;
     public float MaxUpdownAngle = 30f;
 
     public float MoveSpeed = 3f;
@@ -71,6 +72,7 @@ public class PlayerMovement : MonoBehaviour
         float currentAngle = -Clamp(updownAngle, MaxUpdownAngle);
         //Debug.Log(-Clamp(updownAngle, MaxUpdownAngle));
         shootPoint.localEulerAngles = new Vector3(currentAngle, 0,0);
+        trapPoint.localEulerAngles = new Vector3(trapPoint.localEulerAngles.x + currentAngle, 0, 0);
         m_Cam.localEulerAngles = new Vector3(currentAngle, m_Cam.localEulerAngles.y, m_Cam.localEulerAngles.z);
 
     }

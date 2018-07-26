@@ -78,6 +78,12 @@ public class GameController : MonoBehaviour {
                     msg.unpack(rawmsg);
                     HandleUpdateRoundState(ref msg);
                 }
+                else if (msgTpye == Config.MSG_SC_GAME_RESET)
+                {
+                    MsgSCGameReset msg = new MsgSCGameReset();
+                    msg.unpack(rawmsg);
+                    GameReset(ref msg);
+                }
             }
             catch (Exception e)
             {
@@ -90,6 +96,29 @@ public class GameController : MonoBehaviour {
 
     private void GameStart()
     {
+        spawn.InstantiatePlayer(playerInfo.GetPlayerPosition());
+    }
+
+    private void GameReset(ref MsgSCGameReset msg)
+    {
+        UInt16 rid = (UInt16)msg.params_dict["rid"];
+        double x = (double)msg.params_dict["x"], z = (double)msg.params_dict["z"];
+        Vector3 pos = new Vector3((float)x, 0, (float)z);
+        foreach(var player in playerDict)
+            Destroy(player.Value);
+        foreach (var monster in monsterDict)
+            Destroy(monster.Value);
+        foreach (var trap in trapDict)
+            Destroy(trap.Value);
+        playerDict.Clear();
+        monsterDict.Clear();
+        trapDict.Clear();
+        GameObject localplayer = GameObject.Find("localplayer");
+        Destroy(localplayer);
+        playerInfo.SetPlayerPosition(pos);
+        playerInfo.round = rid;
+        playerInfo.UpdatePlayerInfo(100, 0, 0,0,0);
+        playerInfo.playerstate = 0;
         spawn.InstantiatePlayer(playerInfo.GetPlayerPosition());
     }
 
@@ -204,7 +233,7 @@ public class GameController : MonoBehaviour {
         UInt32 uid = (UInt32)msg.params_dict["uid"];
         if (uid == localPlayerId)
         {
-            playerInfo.UpdatePlayerInfo((Int16)msg.params_dict["hp"], (UInt32)msg.params_dict["coin"], (UInt32)msg.params_dict["exp"]);
+            playerInfo.UpdatePlayerInfo((Int16)msg.params_dict["hp"], (UInt32)msg.params_dict["coin"], (UInt32)msg.params_dict["exp"], (UInt16)msg.params_dict["spike"], (UInt16)msg.params_dict["freeze"]);
         }
         else
         {

@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 
 public class Config {
-    
 
     // msgType
     public const UInt16 MSG_CS_MOVETO = 0x1002;
@@ -22,6 +21,15 @@ public class Config {
     public const UInt16 MSG_SC_PLAYER_INFO = 0x2008;
     public const UInt16 MSG_SC_MONSTER_DEATH = 0x2009;
     public const UInt16 MSG_SC_ROUND_STATE = 0x2010;
+    public const UInt16 MSG_SC_GAME_RESET = 0x2012;
+    public const UInt16 MSG_CS_BUY_TRAP = 0x1005;
+
+    //player state
+    public const UInt16 PLAYER_STATE_COMMON = 0;
+    public const UInt16 PLAYER_STATE_TRAPING = 1;
+    public const UInt16 PLAYER_STATE_BUYING = 2;
+
+    public const UInt32 TRAP_COST = 100;
 
     Config()
     {
