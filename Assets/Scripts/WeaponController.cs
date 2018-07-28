@@ -6,26 +6,22 @@ using System;
 public class WeaponController : MonoBehaviour
 {
     public Transform shootPoint;
-
-        public GameObject bomb;
-
+    public GameObject fireBall;
     private PlayerInfo playerInfo;
     private GameController gameController;
-        float shoottimer;                                    // A timer to determine when to fire.
+    float shoottimer;                                    // A timer to determine when to fire.
 
-        Ray shootRay = new Ray();                       // A ray from the gun end forwards.
-        RaycastHit shootHit;                            // A raycast hit to get information about what was hit.
-        int shootableMask;                              // A layer mask so the raycast only hits things on the shootable layer.
-        ParticleSystem gunParticles;                    // Reference to the particle system.
-        LineRenderer gunLine;                           // Reference to the line renderer.
-        AudioSource gunAudio;                           // Reference to the audio source.
+    Ray shootRay = new Ray();                       // A ray from the gun end forwards.
+    RaycastHit shootHit;                            // A raycast hit to get information about what was hit.
+    int shootableMask;                              // A layer mask so the raycast only hits things on the shootable layer.
+    ParticleSystem gunParticles;                    // Reference to the particle system.
+    LineRenderer gunLine;                           // Reference to the line renderer.
+    AudioSource gunAudio;                           // Reference to the audio source.
      //   Light gunLight;                                 // Reference to the light component.
      //   public Light faceLight;								// Duh
-        float effectsDisplayTime = 0.2f;                // The proportion of the timeBetweenBullets that the effects will display for.
-
-
-        float aoeSkillTimer;
-        float bombExistTime = 3f;
+    float effectsDisplayTime = 0.2f;                // The proportion of the timeBetweenBullets that the effects will display for.
+    float aoeSkillTimer;
+    float ballExistTime = 5f;
 
 
         void Awake()
@@ -63,7 +59,8 @@ public class WeaponController : MonoBehaviour
             }
             if (Input.GetButton("Fire2") && aoeSkillTimer >= playerInfo.rightShootCD && Time.timeScale != 0)
             {
-                TrySkillShoot();
+                //TrySkillShoot();
+                Fireball();
             }
         }
         // setting trap state
@@ -105,17 +102,14 @@ public class WeaponController : MonoBehaviour
             // Set the shootRay so that it starts at the end of the gun and points forward from the barrel.
             shootRay.origin = shootPoint.position;
         // trying camera forward
-        //shootRay.direction = shootPoint.forward;
         shootRay.direction = Camera.main.transform.forward;
 
             // Perform the raycast against gameobjects on the shootable layer and if it hits something...
         if (Physics.Raycast(shootRay, out shootHit, playerInfo.shootRange , shootableMask))
         {
-
             // Try and find an EnemyHealth script on the gameobject hit.
-                GameObject monster = shootHit.collider.gameObject;
-
-                // If the EnemyHealth component exist...
+            GameObject monster = shootHit.collider.gameObject;
+            // If the EnemyHealth component exist...
             if (monster.tag == "Monster")
             {
                 // ... the enemy should take damage.
@@ -123,15 +117,11 @@ public class WeaponController : MonoBehaviour
                     UInt32 mid = 0;
                     if (UInt32.TryParse(midstr, out mid))
                     {
-                        Message msg = new MsgCSMonsterDamage(gameController.localPlayerId, mid, playerInfo.leftShootDamage, 0,0, 0, 0);
+                        Message msg = new MsgCSMonsterDamage(playerInfo.GetPlayerId(), mid, playerInfo.leftShootDamage,0, 0, 0);
                         gameController.SendMessage(ref msg);
                     }
-                    else
-                    {// parse error 
-                        //Debug.Log("parsing midstr to mid error."+midstr);
-                    }
+                monster.GetComponent<AICharactorController>().IsHit(shootHit.point);
             }
-                
                 // Set the second position of the line renderer to the point the raycast hit.
                 gunLine.SetPosition(1, shootHit.point);
         }
@@ -143,86 +133,22 @@ public class WeaponController : MonoBehaviour
         }
     }
 
-        void TrySkillShoot()
-        {
-  // Reset the timer.
-            aoeSkillTimer = 0f;
 
-            // Play the gun shot audioclip.
-            gunAudio.Play();
-
-            // Enable the lights.
-         //   gunLight.enabled = true;
-        //    faceLight.enabled = true;
-
-            // Stop the particles from playing if they were, then start the particles.
-            gunParticles.Stop();
-            gunParticles.Play();
-
-            // Enable the line renderer and set it's first position to be the end of the gun.
-            gunLine.enabled = true;
-            gunLine.SetPosition(0, shootPoint.position);
-
-            // Set the shootRay so that it starts at the end of the gun and points forward from the barrel.
-            shootRay.origin = shootPoint.position;
-        // trying camera forward
-        //shootRay.direction = shootPoint.forward;
-        shootRay.direction = Camera.main.transform.forward;
-
-            // Perform the raycast against gameobjects on the shootable layer and if it hits something...
-            if (Physics.Raycast(shootRay, out shootHit, playerInfo.shootRange , shootableMask))
-            {
-
-            // Try and find an EnemyHealth script on the gameobject hit.
-                GameObject monster = shootHit.collider.gameObject;
-
-                // If the EnemyHealth component exist...
-                if (monster.tag == "Monster")
-                {
-                    if (!monster.GetComponent<AICharactorController>().isDead)
-                {
-                    // ... the enemy should take damage.
-                    string midstr = monster.name.Substring(1);
-                    UInt32 mid = 0;
-                    if (UInt32.TryParse(midstr, out mid))
-                    {                       
-                        Message msg = new MsgCSMonsterDamage(gameController.localPlayerId, mid, playerInfo.leftShootDamage, 0, 5,shootHit.point.x, shootHit.point.z);
-                        gameController.SendMessage(ref msg);
-                    }
-                    else
-                    {// parse error 
-                        //Debug.Log("parsing midstr to mid error."+midstr);
-                    }
-                }
-
-                }
-                
-                // Set the second position of the line renderer to the point the raycast hit.
-                gunLine.SetPosition(1, shootHit.point);
-            }
-            // If the raycast didn't hit anything on the shootable layer...
-            else
-            {
-                // ... set the second position of the line renderer to the fullest extent of the gun's range.
-                gunLine.SetPosition(1, shootRay.origin + shootRay.direction * playerInfo.shootRange);
-            }
-        }
-
-        void SkillShoot()
+        void Fireball()
         {
             aoeSkillTimer = 0;
 
-            GameObject mbomb = Instantiate(bomb, shootPoint.position, shootPoint.rotation);
+            GameObject fireball = Instantiate(fireBall, shootPoint.position, shootPoint.rotation);
 
-            mbomb.GetComponent<Rigidbody>().velocity = shootPoint.TransformDirection(Vector3.forward * 10);
+            fireball.GetComponent<Rigidbody>().velocity = shootPoint.TransformDirection(Vector3.forward * 10);
 
-            // StartCoroutine("BombFree");
+            StartCoroutine("FireBallFree", fireball);
         }
 
-        IEnumerator BombFree()
+        IEnumerator FireBallFree(GameObject obj)
         {
-            yield return new WaitForSeconds(bombExistTime);
-            Destroy(bomb);
+            yield return new WaitForSeconds(ballExistTime);
+            Destroy(obj);
         }
 }
 

@@ -10,7 +10,10 @@ public class AICharactorController : MonoBehaviour {
     public Vector3 destination;
     public Int16 health = 100;
     public UInt16 state = 0;
+    public GameObject box;
+    public Transform throwPoint;
     public bool isDead;                                // Whether the enemy is dead.
+    public AudioClip deathClip;
 
     private Animator animator;
     AudioSource enemyAudio;                     // Reference to the audio source.
@@ -27,7 +30,6 @@ public class AICharactorController : MonoBehaviour {
         capsuleCollider = GetComponent<CapsuleCollider>();
         agent.updateRotation = true;
         agent.updatePosition = true;
-
 	}
 	
 	// Update is called once per frame
@@ -40,12 +42,6 @@ public class AICharactorController : MonoBehaviour {
         {
             agent.SetDestination(destination);
         }
-            
-        // finish the former movement 
-        //if (agent.remainingDistance > agent.stoppingDistance)
-        //    character.Move(agent.desiredVelocity, false, false);
-        //else
-        //    character.Move(Vector3.zero, false, false);
     }
 
     public void SetDestination(Vector3 pos)
@@ -56,6 +52,12 @@ public class AICharactorController : MonoBehaviour {
         //transform.position = pos;
     }
 
+    public void ThrowBox(GameObject target)
+    {
+        ThrownBox newbox = Instantiate(box, throwPoint).GetComponent<ThrownBox>();
+        newbox.target = target;
+    }
+
     public void OnDeath()
     {
         // The enemy is dead.
@@ -64,7 +66,8 @@ public class AICharactorController : MonoBehaviour {
 
         // Turn the collider into a trigger so shots can pass through it.
         capsuleCollider.isTrigger = true;
-
+        enemyAudio.clip = deathClip;
+        enemyAudio.Play();
         // Tell the animator that the enemy is dead.
         animator.SetTrigger("Dead");
 
@@ -74,6 +77,15 @@ public class AICharactorController : MonoBehaviour {
     {
         agent.enabled = false;
         Destroy(gameObject, 2f);
+    }
+
+    public void IsHit(Vector3 hitPoint)
+    {
+        if (isDead)
+            return;
+        enemyAudio.Play();
+        hitParticles.transform.position = hitPoint;
+        hitParticles.Play();
     }
 
     public void UpdateState(Int16 hp, UInt16 s)

@@ -291,6 +291,10 @@
       <Project>{6439B0B6-C827-AC16-CD69-C4C5DF2BB0A7}</Project>
       <Name>client</Name>
     </ProjectReference>
+    <ProjectReference Include="client.unityproj">
+      <Project>{6439B0B6-C827-AC16-CD69-C4C5DF2BB0A7}</Project>
+      <Name>client</Name>
+    </ProjectReference>
     <ProjectReference Include="client.Editor.Plugins.csproj">
       <Project>{9A7FC4D5-9A6A-05CC-84CF-BF62A0C21854}</Project>
       <Name>client.Editor.Plugins</Name>
@@ -302,6 +306,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Fonts\LuckiestGuy\LICENSE.txt" />
+    <None Include="Assets\MagicArsenal\MagicArsenal - ReadMe.txt" />
     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />

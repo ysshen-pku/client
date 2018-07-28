@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 54976647011012920}
   - component: {fileID: 136556649124934768}
   - component: {fileID: 195447723554604896}
-  - component: {fileID: 114189101011142432}
+  - component: {fileID: 114967396854414622}
   m_Layer: 0
   m_Name: RemotePlayer
   m_TagString: Player
@@ -317,18 +317,6 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &114189101011142432
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1442967168559208}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 882073a82e73ae949a06e093dd30dc00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destination: {x: 0, y: 0, z: 0}
 --- !u!114 &114806167345813046
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -340,11 +328,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 855787fdc78ae2d468c71eb5a88de3c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damagePerShot: 20
-  timeBetweenBullets: 0.15
-  range: 100
-  aoeSkillCD: 5
+  shootPoint: {fileID: 0}
   bomb: {fileID: 1972351381622412, guid: 096af88a8ac619e4d8d2336d29c90cc2, type: 2}
+--- !u!114 &114967396854414622
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1442967168559208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29a97cd8a205c07459e4f866d2ced2a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!120 &120081966111334464
 LineRenderer:
   m_ObjectHideFlags: 1

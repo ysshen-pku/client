@@ -6,7 +6,6 @@ using System;
 
 public class GameController : MonoBehaviour {
 
-    public UInt32 localPlayerId;
     const int headSize = 4;
     ConnectSocket mySocket;
     SpawnManager spawn;
@@ -48,17 +47,17 @@ public class GameController : MonoBehaviour {
                     msg.unpack(rawmsg);
                     HandleMonsterMove(ref msg);
                 }
+                else if (msgTpye == Config.MSG_SC_OBJECT_DELETE)
+                {
+                    MsgSCObjectDelete msg = new MsgSCObjectDelete();
+                    msg.unpack(rawmsg);
+                    HandleObjectDelete(ref msg);
+                }
                 else if (msgTpye == Config.MSG_SC_TRAPPLACE)
                 {
                     MsgSCTrapPlace msg = new MsgSCTrapPlace();
                     msg.unpack(rawmsg);
                     HandleTrapPlace(ref msg);
-                }
-                else if (msgTpye == Config.MSG_SC_MONSTER_DEATH)
-                {
-                    MsgSCMonsterDeath msg = new MsgSCMonsterDeath();
-                    msg.unpack(rawmsg);
-                    HandleMonsterDeath(ref msg);
                 }
                 else if (msgTpye == Config.MSG_SC_MONSTER_STATE)
                 {
@@ -117,7 +116,6 @@ public class GameController : MonoBehaviour {
         Destroy(localplayer);
         playerInfo.SetPlayerPosition(pos);
         playerInfo.round = rid;
-        playerInfo.UpdatePlayerInfo(100, 0, 0,0,0);
         playerInfo.playerstate = 0;
         spawn.InstantiatePlayer(playerInfo.GetPlayerPosition());
     }
@@ -127,7 +125,7 @@ public class GameController : MonoBehaviour {
         Vector3 pos = new Vector3((float)(double)msg.params_dict["x"],0, (float)(double)msg.params_dict["z"]);
         UInt32 uid = (UInt32)msg.params_dict["uid"];
         //Vector3 rot = new Vector3((float)(double)msg.params_dict["rx"], (float)(double)msg.params_dict["ry"]);
-        if (uid == localPlayerId)
+        if (uid == playerInfo.GetPlayerId())
             return;
         string newplayername = "player" + uid.ToString();
         if (playerDict.ContainsKey(newplayername))
@@ -168,7 +166,7 @@ public class GameController : MonoBehaviour {
     {
         Vector3 pos = new Vector3((float)(double)msg.params_dict["x"], 0, (float)(double)msg.params_dict["z"]);
         UInt32 mid = (UInt32)msg.params_dict["mid"];
-
+        
         string monstername = "m" + mid.ToString();
         if (monsterDict.ContainsKey(monstername))
         {
@@ -177,8 +175,9 @@ public class GameController : MonoBehaviour {
         else
         {
             // cannot find monster with mid
+            UInt16 mtype = (UInt16)msg.params_dict["mtype"];
             Quaternion rot = new Quaternion();
-            GameObject thismonster = spawn.InstantiateMonster(monstername, pos, rot);
+            GameObject thismonster = spawn.InstantiateMonster(monstername,mtype, pos, rot);
             monsterDict.Add(monstername, thismonster);
         }
     }
@@ -188,56 +187,102 @@ public class GameController : MonoBehaviour {
         UInt32 mid = (UInt32)msg.params_dict["mid"];
         Int16 hp = (Int16)msg.params_dict["hp"];
         UInt16 state = (UInt16)msg.params_dict["state"];
+        UInt32 taruid = (UInt32)msg.params_dict["taruid"];
         string monstername = "m" + mid.ToString();
         if (monsterDict.ContainsKey(monstername))
         {
-            monsterDict[monstername].GetComponent<AICharactorController>().UpdateState(hp, state);
+            AICharactorController monsterAI = monsterDict[monstername].GetComponent<AICharactorController>();
+            monsterAI.UpdateState(hp, state);
+            // attack cmd
+            if (taruid != 0)
+            {
+                String targetname;
+                if (taruid == playerInfo.GetPlayerId())
+                    targetname = "localplayer";
+                else
+                    targetname = "player" + taruid.ToString();
+                monsterAI.ThrowBox(GameObject.Find(targetname));
+            }
         }
     } 
 
-    private void HandleMonsterDeath(ref MsgSCMonsterDeath msg)
+    private void HandleObjectDelete(ref MsgSCObjectDelete msg)
     {
-        UInt32 killuid = (UInt32)msg.params_dict["uid"];
-        UInt32 mid = (UInt32)msg.params_dict["mid"];
-        string monstername = "m" + mid.ToString();
-        if (monsterDict.ContainsKey(monstername))
+        UInt16 type = (UInt16)msg.params_dict["type"];
+        UInt32 id = (UInt32)msg.params_dict["id"];
+        if (type == 1)
         {
-            // delete 
-            monsterDict[monstername].GetComponent<AICharactorController>().OnDeath();
-            monsterDict.Remove(monstername);
+            if (id == playerInfo.GetPlayerId())
+            {
+                //on local player death
+                GameObject player = GameObject.Find("localplayer");
+                Camera[] cams = Camera.allCameras;
+                foreach(Camera cam in cams)
+                {
+                    if (cam.name == "ThirdPersonCamera")
+                    {
+                        cam.enabled= true;
+                    }
+                }
+                playerInfo.gameState = Config.PLAYER_STATE_DEAD;
+                Debug.Log("player dead");
+            }
+            else
+            {
+                string name = "player" + id.ToString();
+                if (playerDict.ContainsKey(name))
+                {
+                    playerDict[name].GetComponent<RemotePlayerController>().OnLeave();
+                    playerDict.Remove(name);
+                }
+            }
         }
-        else
+        else if (type == 2)
         {
-            // cannot find monster with mid
-            // Debug
+            string name = "m" + id.ToString();
+            if (monsterDict.ContainsKey(name))
+            {
+                monsterDict[name].GetComponent<AICharactorController>().OnDeath();
+                monsterDict.Remove(name);
+            }
+        }
+        else if (type == 3)
+        {
+            string name = "t" + id.ToString();
+            if (trapDict.ContainsKey(name))
+            {
+                Destroy(trapDict[name]);
+                trapDict.Remove(name);
+            }
         }
     }
 
     private void HandleTrapPlace(ref MsgSCTrapPlace msg)
     {
         UInt32 tid = (UInt32)msg.params_dict["tid"];
-        GameObject[] traps = GameObject.FindGameObjectsWithTag("Finish");
         string trapname = "m" + tid.ToString();
-        foreach (GameObject trap in traps)
+        if (trapDict.ContainsKey(trapname))
         {
-            if (trap.name == trapname)
-            {
-                return;
-            }
+            return;
         }
-        spawn.InstantiateTrap(trapname,(UInt16)msg.params_dict["type"], (float)(double)msg.params_dict["x"], (float)(double)msg.params_dict["z"]);
-    }
+        else
+        {
+            GameObject trap = spawn.InstantiateTrap(trapname, (UInt16)msg.params_dict["type"], (float)(double)msg.params_dict["x"], (float)(double)msg.params_dict["z"]);
+            trapDict.Add(trapname, trap);
+        }
+            }
 
     private void HandleUpdatePlayerInfo(ref MsgSCPlayerInfo msg)
     {
         UInt32 uid = (UInt32)msg.params_dict["uid"];
-        if (uid == localPlayerId)
+        UInt16 state = (UInt16)msg.params_dict["state"];
+        if (uid == playerInfo.GetPlayerId())
         {
-            playerInfo.UpdatePlayerInfo((Int16)msg.params_dict["hp"], (UInt32)msg.params_dict["coin"], (UInt32)msg.params_dict["exp"], (UInt16)msg.params_dict["spike"], (UInt16)msg.params_dict["freeze"]);
-        }
-        else
-        {
-            //
+            if (state == Config.PLAYER_STATE_DEAD)
+            {
+                playerInfo.playerstate = Config.PLAYER_STATE_DEAD;
+            }
+            playerInfo.UpdatePlayerInfo((UInt16)msg.params_dict["level"], (Int16)msg.params_dict["hp"], (UInt32)msg.params_dict["coin"], (UInt32)msg.params_dict["exp"], (UInt16)msg.params_dict["spike"], (UInt16)msg.params_dict["freeze"]);
         }
     }
 
@@ -245,6 +290,8 @@ public class GameController : MonoBehaviour {
     {
         playerInfo.baseHP = (Int16)msg.params_dict["basehp"];
         playerInfo.round = (UInt16)msg.params_dict["rid"];
+        playerInfo.gameState = (UInt16)msg.params_dict["gamestate"];
+        playerInfo.remainMonster = (UInt16)msg.params_dict["remain"];
     }
 
 
@@ -253,7 +300,6 @@ public class GameController : MonoBehaviour {
         //DontDestroyOnLoad(this.gameObject);
         mySocket = ConnectSocket.getSocketInstance();
         playerInfo = PlayerInfo.getinstance();
-        localPlayerId = playerInfo.GetPlayerId();
         monsterDict = new Dictionary<string, GameObject>();
         trapDict = new Dictionary<string, GameObject>();
         playerDict = new Dictionary<string, GameObject>();

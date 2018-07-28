@@ -8,11 +8,14 @@ public class PlayerInfo
     public float leftShootCD = 0.15f;
     public float rightShootCD = 0.5f;
     public float shootRange = 100f;
-    public UInt16 leftShootDamage = 40;
-    public UInt16 rightShootDamage = 50;
+    public UInt16 locallevel = 0;
+    public UInt16 leftShootDamage = 10;
+    public UInt16 rightShootDamage = 20;
 
+    public UInt16 gameState = 0;
     public UInt16 round = 0;
     public Int16 baseHP = 10;
+    public UInt16 remainMonster = 0;
 
     public UInt16 spikeTrapRemain = 0;
     public UInt16 freezeTrapRemain = 0;
@@ -34,8 +37,14 @@ public class PlayerInfo
         return instance;
     }
 
-    public void UpdatePlayerInfo(Int16 hp, UInt32 coin, UInt32 exp, UInt16 spike, UInt16 freeze)
+    public void UpdatePlayerInfo(UInt16 level, Int16 hp, UInt32 coin, UInt32 exp, UInt16 spike, UInt16 freeze)
     {
+        if (level != locallevel)
+        {
+            leftShootDamage = (UInt16)(10 + 5* (level -1));
+            rightShootDamage = (UInt16)(20 + 5 * (level - 1));
+        }
+        locallevel = level;
         health = hp;
         localcoin = coin;
         localexp = exp;

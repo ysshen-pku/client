@@ -5,6 +5,7 @@ using UnityEngine;
 public class SyncPlayer : MonoBehaviour {
 
     private GameController gamelogic;
+    private PlayerInfo playerInfo;
 
     float time = 1f;
     const float syncCycle = 0.05f;
@@ -16,10 +17,13 @@ public class SyncPlayer : MonoBehaviour {
         {
             Debug.Log("Cannot find GameController.");
         }
+        playerInfo = PlayerInfo.getinstance();
     }
 
     // Update is called once per frame
-    void LateUpdate () {
+    void Update () {
+        if (playerInfo.playerstate == Config.PLAYER_STATE_DEAD)
+            return;
         time += Time.deltaTime;
 		if (time > syncCycle)
         {

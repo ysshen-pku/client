@@ -34,7 +34,7 @@ public class BuyController : MonoBehaviour {
     void TryBuyTrap(UInt16 traptype)
     {
         buytimer = 0;
-        Message msg = new MsgCSBuyTrap(playerInfo.GetPlayerId(), traptype);
+        Message msg = new MsgCSBuy(playerInfo.GetPlayerId(),Config.BUY_COST_COIN, traptype);
         gameController.SendMessage(ref msg);
     }
 

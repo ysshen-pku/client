@@ -38,19 +38,20 @@ public class SpawnManager : MonoBehaviour {
         return newplayer;
     }
 
-    public GameObject InstantiateMonster(string name, Vector3 pos, Quaternion rot)
+    public GameObject InstantiateMonster(string name, UInt16 mtype, Vector3 pos, Quaternion rot)
     {
-        var newmonster = Instantiate(monsters[0], pos, rot);
+        var newmonster = Instantiate(monsters[mtype-1], pos, rot);
         newmonster.name = name;
-        newmonster.GetComponent<AICharactorController>().health = 100;
+        AICharactorController monsterAI = newmonster.GetComponent<AICharactorController>();
+        monsterAI.health = 100;
         return newmonster;
     }
 
     public GameObject InstantiateTrap(string name, UInt16 type, double x, double z)
     {
-        Vector3 pos = new Vector3((float)x, 0.06f, (float)z);
+        Vector3 pos = new Vector3((float)x, 0.01f, (float)z);
         Quaternion rot = new Quaternion();
-        var newtrap = Instantiate(traps[type], pos, rot);
+        var newtrap = Instantiate(traps[type-1], pos, rot);
         newtrap.name = name;
         return newtrap;
     }

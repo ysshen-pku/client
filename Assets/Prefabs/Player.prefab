@@ -547,7 +547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootPoint: {fileID: 4316274202602884}
-  bomb: {fileID: 1972351381622412, guid: 096af88a8ac619e4d8d2336d29c90cc2, type: 2}
+  fireBall: {fileID: 1715551654806212, guid: a37d93be5aad68242a6a8e8a89b3e133, type: 2}
 --- !u!114 &114204437059161864
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -612,7 +612,7 @@ MonoBehaviour:
   trapPoint: {fileID: 4864374838848794}
   trap:
   - {fileID: 1504343748710898, guid: 830ea786417f663438ea9f58d85e1613, type: 2}
-  - {fileID: 1819845330696000, guid: 68332f0630e0ed843b375be93c28a8dd, type: 2}
+  - {fileID: 1600846290948006, guid: cc6a878715d03ab44890df02f5158f53, type: 2}
 --- !u!120 &120348826327671552
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -879,7 +879,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: 1878547225
+  randomSeed: -147335919
   InitialModule:
     serializedVersion: 3
     enabled: 1

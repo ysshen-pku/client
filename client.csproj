@@ -297,7 +297,15 @@
     <Compile Include="Assets\_CompletedAssets\SampleAssets\Effects\ImageEffects\Scripts\VignetteAndChromaticAberration.cs" />
     <Compile Include="Assets\JSON.cs" />
     <Compile Include="Assets\JsonTest.cs" />
-    <Compile Include="Assets\NavExport.cs" />
+    <Compile Include="Assets\MagicArsenal\Demo\Scripts\MagicButtonScript.cs" />
+    <Compile Include="Assets\MagicArsenal\Demo\Scripts\MagicDragMouseOrbit.cs" />
+    <Compile Include="Assets\MagicArsenal\Demo\Scripts\MagicFireProjectile.cs" />
+    <Compile Include="Assets\MagicArsenal\Demo\Scripts\MagicLoadSceneOnClick.cs" />
+    <Compile Include="Assets\MagicArsenal\Demo\Scripts\MagicLoopScript.cs" />
+    <Compile Include="Assets\MagicArsenal\Demo\Scripts\MagicProjectileScript.cs" />
+    <Compile Include="Assets\MagicArsenal\Effects\Scripts\MagicBeamScript.cs" />
+    <Compile Include="Assets\MagicArsenal\Effects\Scripts\MagicLightFade.cs" />
+    <Compile Include="Assets\MagicArsenal\Effects\Scripts\MagicRotation.cs" />
     <Compile Include="Assets\Scripts\AICharactorController.cs" />
     <Compile Include="Assets\Scripts\BombController.cs" />
     <Compile Include="Assets\Scripts\BoxPlace.cs" />
@@ -324,11 +332,13 @@
     <Compile Include="Assets\Scripts\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\StructConverter.cs" />
     <Compile Include="Assets\Scripts\SyncPlayer.cs" />
+    <Compile Include="Assets\Scripts\ThrownBox.cs" />
     <Compile Include="Assets\Scripts\TrapController.cs" />
     <Compile Include="Assets\Scripts\WeaponController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Fonts\LuckiestGuy\LICENSE.txt" />
+    <None Include="Assets\MagicArsenal\MagicArsenal - ReadMe.txt" />
     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />

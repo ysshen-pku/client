@@ -11,6 +11,8 @@ public class PlayerMovement : MonoBehaviour
     public float MoveSpeed = 3f;
     public float RotateSpeed = 3f;
     public Transform m_Cam;                  // A reference to the main camera in the scenes transform
+
+    private PlayerInfo playerInfo;
         private Vector3 m_Move;
     private float updownAngle=0f;
         private Animator anim;                      // Reference to the animator component.
@@ -20,54 +22,42 @@ public class PlayerMovement : MonoBehaviour
         private float camRayLength = 100f;          // The length of the ray from the camera into the scene.
 #endif
 
-        void Awake()
-        {
+    void Awake()
+    {
             // Set up references.
-            anim = GetComponent<Animator>();
-            playerRigidbody = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
+        playerRigidbody = GetComponent<Rigidbody>();
         m_Cam = GetComponentInChildren<Camera>().transform;
-        }
-
-        void Start()
-        {
-            //mCamera = Camera.main;
-            //Debug.Log("mouselookInit");
-           // mouseLook.Init(transform, mCamera.transform);
-         //   Debug.Log("mouselookFIn");
-        }
+        playerInfo = PlayerInfo.getinstance();
+     }
 
 
     void FixedUpdate()
+    {
+        if (playerInfo.playerstate!=Config.PLAYER_STATE_DEAD && playerInfo.gameState!= Config.GAME_STATE_LOSE)
         {
-            // Store the input axes.
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
-
-
-            // we use world-relative directions in the case of no main camera
             m_Move = v * transform.forward + h * transform.right;
-
-        m_Move *= MoveSpeed*Time.deltaTime;
-
-        transform.position += m_Move;
-        //playerRigidbody.MovePosition(transform.position + m_Move);
-        Rotate();
-        // Animate the player.
-        Animating(h, v);
+            m_Move *= MoveSpeed * Time.deltaTime;
+            transform.position += m_Move;
+            Rotate();
+            // Animate the player.
+            Animating(h, v);
         }
+    }
 
 
-        void Rotate()
+    void Rotate()
     {
         //相机旋转
-        
+        // x方向任意旋转
         float x = RotateSpeed * Input.GetAxis("Mouse X");
-
         transform.rotation = Quaternion.Euler(
             transform.rotation.eulerAngles +
             Quaternion.AngleAxis(x, Vector3.up).eulerAngles
         );
-
+        //锁定上下视角，并且改变武器射线发射角度
         updownAngle += RotateSpeed* 0.2f * Input.GetAxis("Mouse Y");
         float currentAngle = -Clamp(updownAngle, MaxUpdownAngle);
         //Debug.Log(-Clamp(updownAngle, MaxUpdownAngle));

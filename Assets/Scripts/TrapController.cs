@@ -15,6 +15,7 @@ public class TrapController : MonoBehaviour {
     int shootableMask;                              // A layer mask so the raycast only hits things on the shootable layer.
     GameObject lastObject;
     float placetimer;
+    UInt16 traptype = 0;
 
     private void Awake()
     {
@@ -26,6 +27,7 @@ public class TrapController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        placetimer += Time.deltaTime;
         lastObject = GameObject.FindGameObjectWithTag("Temp");
         if (lastObject != null)
         {
@@ -35,30 +37,44 @@ public class TrapController : MonoBehaviour {
         {
             if (Input.GetButton("Fire1") && placetimer >= 2f && Time.timeScale != 0)
             {
-                TryPlaced();
+                TryPlaced(traptype);
+                traptype = 0;
             }
-            shootRay.origin = trapPoint.position;
-            shootRay.direction = trapPoint.forward;
-            // Perform the raycast against gameobjects on the shootable layer and if it hits something...
-            if (Physics.Raycast(shootRay, out shootHit, playerInfo.shootRange, shootableMask))
+            if (Input.GetButton("Key1"))
             {
-                //Debug.Log("Did Hit");
-                if (shootHit.collider.gameObject.tag == "Ground")
+                traptype = 1;
+            }
+            else if(Input.GetButton("Key2"))
+            {
+                traptype = 2;
+            }
+            if (traptype != 0)
+            {
+                shootRay.origin = trapPoint.position;
+                shootRay.direction = trapPoint.forward;
+                // Perform the raycast against gameobjects on the shootable layer and if it hits something...
+                if (Physics.Raycast(shootRay, out shootHit, playerInfo.shootRange, shootableMask))
                 {
-                    //Debug.Log("Did Hit Ground");
-                    Vector3 placePosition = shootHit.point;
-                    //fix the position 
-                    placePosition = GetTrapFixedPos(placePosition);
-                    placePosition.y += 0.01f;
-                    Quaternion rot = new Quaternion();
-                    Instantiate(trap[0], placePosition, rot);
-                }
+                    //Debug.Log("Did Hit");
+                    if (shootHit.collider.gameObject.tag == "Ground")
+                    {
+                        //Debug.Log("Did Hit Ground");
+                        Vector3 placePosition = shootHit.point;
+                        //fix the position 
+                        int ax = 0, az = 0;
+                        GetArrayPos(placePosition, ref ax, ref az);
+                        placePosition = GetWorldPos(ax, az);
+                        placePosition.y = 0.01f;
+                        Quaternion rot = new Quaternion();
+                        Instantiate(trap[traptype-1], placePosition, rot);
+                    }
 
+                }
             }
         }
     }
 
-    void TryPlaced()
+    void TryPlaced(UInt16 type)
     {
         placetimer = 0;
         shootRay.origin = trapPoint.position;
@@ -72,8 +88,9 @@ public class TrapController : MonoBehaviour {
                 //Debug.Log("Did Hit Ground");
                 // ... the enemy should take damage.
                 Vector3 pos = shootHit.point;
-
-                Message msg = new MsgCSTrapPlace(gameController.localPlayerId, 0, (double)pos.x, (double)pos.z);
+                int ax=0, az=0;
+                GetArrayPos(pos, ref ax, ref az);
+                Message msg = new MsgCSTrapPlace(playerInfo.GetPlayerId(), type, (UInt16)ax, (UInt16)az);
                 gameController.SendMessage(ref msg);
                 //placePosition.y += 0.01f;
                 //Instantiate(trap[1], placePosition, Quaternion.identity);
@@ -82,16 +99,17 @@ public class TrapController : MonoBehaviour {
         }
     }
 
-    private Vector3 GetTrapFixedPos(Vector3 pos)
+    private void GetArrayPos(Vector3 pos,ref int ax,ref int az)
+    {
+        ax = (int)(5 * (pos.x + 10));
+        az = (int)(5 * (35 - pos.z));
+    }
+
+    private Vector3 GetWorldPos(int ax, int az)
     {
         Vector3 fpos = new Vector3();
-        int ax = (int)(5 * (pos.x + 10));
         fpos.x = (float)(ax * 0.2 - 10);
-
-        int az = (int)(5 * (35 - pos.z));
         fpos.z = (float)(35 - az * 0.2);
-        
-        fpos.y = pos.y;
         return fpos;
     }
 

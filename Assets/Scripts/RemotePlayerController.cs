@@ -50,4 +50,9 @@ public class RemotePlayerController : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    public void OnLeave()
+    {
+        Destroy(gameObject);
+    } 
+
 }

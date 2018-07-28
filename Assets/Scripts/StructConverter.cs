@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using System.Text;
 
 
 // This is a crude implementation of a format string based struct converter for C#.
@@ -199,6 +199,15 @@ public class StructConverter
         // convert each item in the objects to the representative bytes
         foreach (object o in items)
         {
+            if (o is String)
+            {
+                byte[] bytes = Encoding.ASCII.GetBytes((String)o);
+                int len = bytes.Length;
+                outputBytes.AddRange(BitConverter.GetBytes((UInt32)len));
+                outString += 'S';
+                outputBytes.AddRange(bytes);
+                continue;
+            }
             byte[] theseBytes = TypeAgnosticGetBytes(o);
             if (endianFlip == true) theseBytes = (byte[])theseBytes.Reverse();
             outString += GetFormatSpecifierFor(o);

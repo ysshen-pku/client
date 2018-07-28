@@ -16,30 +16,29 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetButton("Trap"))
+        if (Input.GetButton("Trap")&&playerInfo.playerstate != Config.PLAYER_STATE_DEAD)
         {
-            if (playerInfo.playerstate == Config.PLAYER_STATE_COMMON)
-            {
-                Cursor.visible = false;
-                playerInfo.playerstate = Config.PLAYER_STATE_TRAPING;
-            }
-            else if (playerInfo.playerstate == Config.PLAYER_STATE_TRAPING)
-            {
-                playerInfo.playerstate = Config.PLAYER_STATE_COMMON;
-            }
+            playerInfo.playerstate = Config.PLAYER_STATE_TRAPING;
+            Cursor.visible = true;
         }
-        else if (Input.GetButton("Buy"))
+        else if (Input.GetButton("Buy") && playerInfo.playerstate != Config.PLAYER_STATE_DEAD)
         {
-            if (playerInfo.playerstate == Config.PLAYER_STATE_COMMON)
-            {
-                Cursor.visible = true;
-                playerInfo.playerstate = Config.PLAYER_STATE_BUYING;
-            }
-            else
-            {
-                Cursor.visible = false;
-                playerInfo.playerstate = Config.PLAYER_STATE_COMMON;
-            }
+            Cursor.visible = true;
+            playerInfo.playerstate = Config.PLAYER_STATE_BUYING;
+        }
+        else if (Input.GetButton("KeyR") && playerInfo.playerstate != Config.PLAYER_STATE_DEAD)
+        {
+            Cursor.visible = false;
+            playerInfo.playerstate = Config.PLAYER_STATE_COMMON;
+        }
+        else if (Input.GetButton("KeyL") && playerInfo.playerstate != Config.PLAYER_STATE_DEAD)
+        {
+            Message msg = new MsgCSBuy(playerInfo.GetPlayerId(), Config.BUY_COST_EXP, 0);
+            gameController.SendMessage(ref msg);
+        }
+        else if (Input.GetButton("Cancel"))
+        {
+            
         }
     }
 
